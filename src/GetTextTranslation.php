@@ -5,6 +5,13 @@
 
 	class GetTextTranslation {
 
+		/**
+		 * The translation label
+		 *
+		 * Label + instance_key each have a translation.
+		 *
+		 * @var [type]
+		 */
 		private $label;
 
 		/**
@@ -14,6 +21,11 @@
 		 */
 		private $instance_key;
 
+		/**
+		 * The translated text
+		 *
+		 * @var string
+		 */
 		private $translation;
 
 

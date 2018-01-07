@@ -2,6 +2,12 @@
 
 	// TODO:
 	// - create_label() - should this even be belong here?
+	//
+	// Possible options
+	// - ErrorOnDuplicate - throw error if a new translation is added if it exists (label + instance_key)
+	// - Global untranslated text - defaults to '{{label}}~untranslated'.
+	// - Fallback to global (instance_key=0) - default True.
+
 
 	namespace xy2z\GetText;
 

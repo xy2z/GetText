@@ -1,5 +1,8 @@
 <?php
 
+	// TODO:
+	// - create_label() - should this even be belong here?
+
 	namespace xy2z\GetText;
 
 	/**
@@ -22,33 +25,36 @@
 		 *
 		 * @var array
 		 */
-		private $created_labels = array();
+		// private $created_labels = array();
 
 		/**
 		 * Set translations
 		 *
 		 * @param array $translations [description]
 		 */
-		public function set_translations(array $translations) {
-			foreach ($translations as $row) {
-				$this->translations[$row->label][$row->instance_id] = (object) array(
-					'translation' => $row->translation
-				);
-			}
+		// public function set_translations(array $translations) {
+			// foreach ($translations as $row) {
+			// 	$this->translations[$row->label][$row->instance_key] = (object) array(
+			// 		'translation' => $row->translation
+			// 	);
+			// }
+		// } // get_text_translations()
 
-		} // get_text_translations()
+		public function add_translation(GetTextTranslation $translation) {
+			$this->translations[$translation->get_label()][$translation->get_instance_key()] = $translation;
+		}
 
 		/**
 		 * Get text translation
 		 *
 		 * @param string $label [description]
 		 * @param array $replacements [description]
-		 * @param int|integer $instance_id [description]
+		 * @param int|string $instance_key [description]
 		 * @param bool|boolean $empty_if_untranslated [description]
 		 *
 		 * @return [type] [description]
 		 */
-		public function gt(string $label, array $replacements = array(), int $instance_id = 0, bool $empty_if_untranslated = false) : string {
+		public function gt(string $label, array $replacements = array(), $instance_key = 0, bool $empty_if_untranslated = false) : string {
 			if (empty($label)) {
 				throw new Exception('Label cannot be empty');
 			}
@@ -59,33 +65,24 @@
 				// Label is not created.
 
 				// Create the label, if not created before in current pageload.
-				if (!isset($this->created_labels[$label])) {
-					$label_id = $this->create_label($label);
-				}
+				// if (!isset($this->created_labels[$label])) {
+				// 	$label_id = $this->create_label($label);
+				// }
 
-				return $untranslated_text;
-			}
-
-			if (isset($this->translations[$label][null])) {
-				// Label is created, but no translation exist.
 				return $untranslated_text;
 			}
 
 			// Get translation.
-			// If the translation exists for the instance_id, use it. Else use the global (instance_id=0).
-			if (isset($this->translations[$label][$instance_id])) {
-				$translation = $this->translations[$label][$instance_id]->translation;
+			// If the translation exists for the instance_key, use it. Else use the global (instance_key=0).
+			if (isset($this->translations[$label][$instance_key])) {
+				$translation = $this->translations[$label][$instance_key];
 			} else {
-				// Use the global translation.
-				$translation = $this->translations[$label][0]->translation;
+			 	// No translation found for this instance_key.
+			 	// Use the global translation.
+				$translation = $this->translations[$label][0];
 			}
 
-			// Replacements.
-			foreach ($replacements as $key => $value) {
-				$translation = str_replace('{{' . $key . '}}', $value, $translation);
-			}
-
-			return $translation;
+			return $translation->get_translation($replacements, $empty_if_untranslated);
 		} // gt()
 
 		/**
@@ -93,16 +90,16 @@
 		 *
 		 * @param string $label [description]
 		 */
-		private function create_label(string $label) {
-			// $insert = $this->db->insert('get_text_labels', array(
-			// 	'label' => $this->db->clean_string($label)
-			// ));
+		// private function create_label(string $label) {
+		// 	// $insert = $this->db->insert('get_text_labels', array(
+		// 	// 	'label' => $this->db->clean_string($label)
+		// 	// ));
 
-			// if ($insert) {
-				// Add the label ID to the $this->translations array.
-				$this->created_labels[$label] = true;
-			// }
-		} // create_label()
+		// 	// if ($insert) {
+		// 		// Add the label ID to the $this->translations array.
+		// 		$this->created_labels[$label] = true;
+		// 	// }
+		// } // create_label()
 
 
 	} // GetText

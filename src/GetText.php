@@ -54,13 +54,13 @@
 		 * Get text translation
 		 *
 		 * @param string $label [description]
-		 * @param array $replacements [description]
 		 * @param int|string $instance_key [description]
+		 * @param array $replacements [description]
 		 * @param bool|boolean $empty_if_untranslated [description]
 		 *
 		 * @return [type] [description]
 		 */
-		public function gt(string $label, array $replacements = array(), $instance_key = 0, bool $empty_if_untranslated = false) : string {
+		public function gt(string $label, $instance_key = 0, array $replacements = array(), bool $empty_if_untranslated = false) : string {
 			if (empty($label)) {
 				throw new Exception('Label cannot be empty');
 			}

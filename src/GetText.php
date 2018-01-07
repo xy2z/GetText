@@ -16,13 +16,6 @@
 		private $translations = array();
 
 		/**
-		 * Current language ID, can be string/int.
-		 *
-		 * @var integer|string
-		 */
-		private $language_id = 1;
-
-		/**
 		 * Array of created arrays in the current pageload.
 		 * This is to prevent errors when creating a new label in a loop,
 		 * since the label is created the first time it shouldn't try to create it again.
@@ -30,10 +23,6 @@
 		 * @var array
 		 */
 		private $created_labels = array();
-
-		public function __construct($language_id) {
-			$this->language_id = $language_id;
-		}
 
 		/**
 		 * Set translations
@@ -61,7 +50,7 @@
 		 */
 		public function gt(string $label, array $replacements = array(), int $instance_id = 0, bool $empty_if_untranslated = false) : string {
 			if (empty($label)) {
-				throw new Exception('Empty label');
+				throw new Exception('Label cannot be empty');
 			}
 
 			$untranslated_text = ($empty_if_untranslated) ? '' : $label . '~untranslated';
@@ -83,7 +72,7 @@
 			}
 
 			// Get translation.
-			// If it exists for the instance_id, use that, else use the global (mop_id: 0).
+			// If the translation exists for the instance_id, use it. Else use the global (instance_id=0).
 			if (isset($this->translations[$label][$instance_id])) {
 				$translation = $this->translations[$label][$instance_id]->translation;
 			} else {

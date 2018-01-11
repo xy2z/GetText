@@ -42,22 +42,6 @@
 		}
 
 		/**
-		 * Get label
-		 *
-		 */
-		public function get_label() : string {
-			return $this->label;
-		}
-
-		/**
-		 * Get $instance_key
-		 *
-		 */
-		public function get_instance_key() {
-			return $this->instance_key;
-		}
-
-		/**
 		 * Get translated text with replacements
 		 *
 		 * @param array $replacements Replacements without { or }.

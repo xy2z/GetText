@@ -1,13 +1,5 @@
 <?php
 
-	// TODO:
-	// - create_label() - should this even be belong here?
-	//
-	// Possible options
-	// - ErrorOnDuplicate - throw error if a new translation is added if it exists (label + instance_key)
-	// - Global untranslated text - defaults to '{{label}}~untranslated'.
-	// - Fallback to global (instance_key=0) - default True.
-
 
 	namespace xy2z\GetText;
 
@@ -19,10 +11,19 @@
 
 		/**
 		 * Loaded translations
+		 * Array of GetTextTranslation instances.
 		 *
 		 * @var array
 		 */
 		private $translations = array();
+
+		/**
+		 * The anonymous function to be called when a new label is found.
+		 * This can be useful for creating it in the database.
+		 *
+		 * @var function
+		 */
+		public $create_label_function = null;
 
 		/**
 		 * Array of created arrays in the current pageload.
@@ -34,31 +35,25 @@
 		// private $created_labels = array();
 
 		/**
-		 * Set translations
+		 * Add translation
 		 *
-		 * @param array $translations [description]
+		 * @param string $label Label name.
+		 * @param string|int $instance_key Instance key.
+		 * @param string $translation The translated text.
 		 */
-		// public function set_translations(array $translations) {
-			// foreach ($translations as $row) {
-			// 	$this->translations[$row->label][$row->instance_key] = (object) array(
-			// 		'translation' => $row->translation
-			// 	);
-			// }
-		// } // get_text_translations()
-
-		public function add_translation(GetTextTranslation $translation) {
-			$this->translations[$translation->get_label()][$translation->get_instance_key()] = $translation;
+		public function add_translation(string $label, $instance_key, string $translation) {
+			$this->translations[$label][$instance_key] = new GetTextTranslation($label, $instance_key, $translation);
 		}
 
 		/**
 		 * Get text translation
 		 *
-		 * @param string $label [description]
-		 * @param int|string $instance_key [description]
-		 * @param array $replacements [description]
-		 * @param bool|boolean $empty_if_untranslated [description]
+		 * @param string $label
+		 * @param int|string $instance_key
+		 * @param array $replacements
+		 * @param bool|boolean $empty_if_untranslated
 		 *
-		 * @return [type] [description]
+		 * @return string The translated text if found.
 		 */
 		public function gt(string $label, $instance_key = 0, array $replacements = array(), bool $empty_if_untranslated = false) : string {
 			if (empty($label)) {
@@ -71,9 +66,10 @@
 				// Label is not created.
 
 				// Create the label, if not created before in current pageload.
-				// if (!isset($this->created_labels[$label])) {
-				// 	$label_id = $this->create_label($label);
-				// }
+				if (isset($this->create_label_function)) {
+					// Call the anonymous function.
+					call_user_func($this->create_label_function, $label);
+				}
 
 				return $untranslated_text;
 			}
@@ -90,22 +86,6 @@
 
 			return $translation->get_translation($replacements, $empty_if_untranslated);
 		} // gt()
-
-		/**
-		 * Create new label
-		 *
-		 * @param string $label [description]
-		 */
-		// private function create_label(string $label) {
-		// 	// $insert = $this->db->insert('get_text_labels', array(
-		// 	// 	'label' => $this->db->clean_string($label)
-		// 	// ));
-
-		// 	// if ($insert) {
-		// 		// Add the label ID to the $this->translations array.
-		// 		$this->created_labels[$label] = true;
-		// 	// }
-		// } // create_label()
 
 
 	} // GetText

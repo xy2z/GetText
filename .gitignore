@@ -1,1 +1,4 @@
 test-gettext.php
+vendor/
+composer.lock
+gettext-todo.txt

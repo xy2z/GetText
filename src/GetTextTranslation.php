@@ -33,9 +33,9 @@
 		 *
 		 * @param string $label Translation label
 		 * @param string|int $instance_key The instance ID/key.
-		 * @param string $translation Translated text.
+		 * @param mixed $translation Translated text.
 		 */
-		public function __construct(string $label, $instance_key, string $translation) {
+		public function __construct(string $label, $instance_key, $translation) {
 			$this->label = $label;
 			$this->instance_key = $instance_key;
 			$this->translation = $translation;
@@ -49,8 +49,15 @@
 		 *
 		 * @return string The translated text.
 		 */
-		public function get_translation(array $replacements, bool $empty_if_untranslated) : string {
+		public function get_translation(array $replacements, bool $empty_if_untranslated) {
 			$translation = $this->translation;
+
+			if (is_null($translation) || $translation == '') {
+				if ($empty_if_untranslated) {
+					return '';
+				}
+				return $label . '~untranslated';
+			}
 
 			// Replacements.
 			foreach ($replacements as $key => $value) {

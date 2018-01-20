@@ -56,7 +56,7 @@
 				if ($empty_if_untranslated) {
 					return '';
 				}
-				return $label . '~untranslated';
+				return $this->label . '~untranslated';
 			}
 
 			// Replacements.

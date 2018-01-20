@@ -25,6 +25,7 @@
 		 */
 		public $create_label_function = null;
 
+
 		/**
 		 * Array of created arrays in the current pageload.
 		 * This is to prevent errors when creating a new label in a loop,
@@ -32,7 +33,7 @@
 		 *
 		 * @var array
 		 */
-		// private $created_labels = array();
+		private $created_labels = array();
 
 		/**
 		 * Add translation
@@ -69,9 +70,10 @@
 				// Label is not created.
 
 				// Create the label, if not created before in current pageload.
-				if (isset($this->create_label_function)) {
+				if (isset($this->create_label_function) && (!isset($this->created_labels[$label]))) {
 					// Call the anonymous function.
 					call_user_func($this->create_label_function, $label);
+					$this->created_labels[$label] = true;
 				}
 
 				return $untranslated_text;
